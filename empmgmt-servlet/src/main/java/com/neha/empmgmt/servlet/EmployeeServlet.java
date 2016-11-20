@@ -14,6 +14,7 @@ public class EmployeeServlet extends HttpServlet {
 	protected void doDelete(HttpServletRequest arg0, HttpServletResponse arg1) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		System.out.println("Testin githuub commit");
+		System.out.println("Testing code review");
 		super.doDelete(arg0, arg1);
 	}
 
