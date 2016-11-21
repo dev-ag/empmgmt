@@ -48,18 +48,19 @@ public class Employee {
 	public void setAge(int age) {
 		this.age = age;
 	}
-	public double getSalary() {
-		return salary;
-	}
-	public void setSalary(double salary) {
-		this.salary = salary;
-	}
 	public boolean isFullTime() {
 		return isFullTime;
 	}
 	public void setFullTime(boolean isFullTime) {
 		this.isFullTime = isFullTime;
 	}
+	public double getSalary() {
+		return salary;
+	}
+	public void setSalary(double salary) {
+		this.salary = salary;
+	}
+	
 	public Date getJoinDate() {
 		return joinDate;
 	}

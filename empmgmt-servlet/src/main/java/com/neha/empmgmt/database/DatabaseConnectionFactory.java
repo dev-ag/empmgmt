@@ -7,11 +7,11 @@ import java.sql.SQLException;
 public class DatabaseConnectionFactory {
 	// JDBC driver name and database URL
 	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
-	static final String DB_URL = "jdbc:mysql://localhost/EMP";
+	static final String DB_URL = "jdbc:mysql://localhost/empmgmt";
 	private static Connection connection;
 	//  Database credentials
-	static final String USER = "username";
-	static final String PASS = "password";
+	static final String USER = "neha";
+	static final String PASS = "1234";
 	public static Connection getConnection(){
 		if(connection == null){
 			//STEP 2: Register JDBC driver
