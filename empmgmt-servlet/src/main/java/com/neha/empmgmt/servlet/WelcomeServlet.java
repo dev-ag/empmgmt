@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(urlPatterns="/welcome.do")
+@WebServlet(urlPatterns = "/welcome.do")
 public class WelcomeServlet extends HttpServlet {
 
 	/**
@@ -18,7 +18,7 @@ public class WelcomeServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.getRequestDispatcher("WEB-INF/views/welcome.jsp").forward(req,resp);
+		req.getRequestDispatcher("WEB-INF/views/welcome.jsp").forward(req, resp);
 	}
 
 	@Override
