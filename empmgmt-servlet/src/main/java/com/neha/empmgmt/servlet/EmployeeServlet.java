@@ -22,8 +22,12 @@ public class EmployeeServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Service method called for "+request.getRequestURI());
+		//Routing bases on the HttpMethod type and also based on a paramter called action that will be present in the url in case that is not form submit.
+		// e.g. for a delete operation url = http://localhost:8080/employees.html?id=123&action=delete
+		// e.g. for a update operation url = http://localhost:8080/employees.html?id=123&action=update
+		// POST and PUT would normally be handled via form submit.
 		if(request.getMethod().equalsIgnoreCase(HttpMethod.POST) || 
-				(request.getParameter("action") != null && request.getParameter("action").equalsIgnoreCase("edit"))){
+				(request.getParameter("action") != null && request.getParameter("action").equalsIgnoreCase("add"))){
 			doPost(request, response);
 		} else if (request.getMethod().equalsIgnoreCase(HttpMethod.DELETE) || 
 				(request.getParameter("action") != null && request.getParameter("action").equalsIgnoreCase("delete"))){
@@ -31,8 +35,13 @@ public class EmployeeServlet extends HttpServlet {
 		} else if (request.getMethod().equalsIgnoreCase(HttpMethod.PUT) || 
 				(request.getParameter("action") != null && request.getParameter("action").equalsIgnoreCase("update"))){
 			doDelete(request, response);
-		} else {
+		} else if (request.getMethod().equalsIgnoreCase(HttpMethod.PUT)) {
 			doGet(request, response);
+		} else {
+			if(request.getParameter("action") != null){
+				throw new RuntimeException(request.getMethod() + " is not supported for action = "+request.getParameter("action"));
+			}
+			throw new RuntimeException(request.getMethod() + " is not supported");
 		}
 	}
 
