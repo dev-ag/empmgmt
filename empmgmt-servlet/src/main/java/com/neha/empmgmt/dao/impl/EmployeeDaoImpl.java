@@ -15,7 +15,7 @@ import com.neha.empmgmt.model.Department;
 import com.neha.empmgmt.model.Employee;
 
 public class EmployeeDaoImpl implements EmployeeDao {
-	DepartmentDao departmentDao = new DepartmentDaoImpl();
+	private DepartmentDao departmentDao = new DepartmentDaoImpl();
 
 	@Override
 	public Employee findById(int id) {

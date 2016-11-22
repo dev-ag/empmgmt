@@ -8,7 +8,7 @@ import com.neha.empmgmt.model.Employee;
 import com.neha.empmgmt.service.EmployeeService;
 
 public class EmployeeServiceImpl implements EmployeeService {
-	EmployeeDao employeeDao = new EmployeeDaoImpl();
+	private EmployeeDao employeeDao = new EmployeeDaoImpl();
 
 	@Override
 	public Employee findById(int id) {

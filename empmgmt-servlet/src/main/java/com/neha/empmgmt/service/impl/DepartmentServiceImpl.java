@@ -8,7 +8,7 @@ import com.neha.empmgmt.model.Department;
 import com.neha.empmgmt.service.DepartmentService;
 
 public class DepartmentServiceImpl implements DepartmentService {
-	DepartmentDao departmentDao = new DepartmentDaoImpl();
+	private DepartmentDao departmentDao = new DepartmentDaoImpl();
 
 	@Override
 	public Department findById(int id) {
