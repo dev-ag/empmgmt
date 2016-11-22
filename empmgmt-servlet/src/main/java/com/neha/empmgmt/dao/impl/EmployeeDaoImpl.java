@@ -8,11 +8,14 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.neha.empmgmt.dao.DepartmentDao;
 import com.neha.empmgmt.dao.EmployeeDao;
 import com.neha.empmgmt.database.DatabaseConnectionFactory;
+import com.neha.empmgmt.model.Department;
 import com.neha.empmgmt.model.Employee;
 
 public class EmployeeDaoImpl implements EmployeeDao {
+	DepartmentDao departmentDao = new DepartmentDaoImpl();
 
 	@Override
 	public Employee findById(int id) {
@@ -33,12 +36,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
 				employee.setFullTime(rs.getBoolean("fulltime"));
 				employee.setJoinDate(rs.getDate("joindate"));
 				int departmentId = rs.getInt("department");
-
+				employee.setDepartment(departmentDao.findById(departmentId));
 			}
-			// TODO Wait until creation of DepartmentDaoImpl and findById
-			// method in it.
-			// Then use this method to get the department object here
-			// employee.setDepartment(departmetDaoImpl.findById(departmentId));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -64,12 +63,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
 				employee.setFullTime(rs.getBoolean("fulltime"));
 				employee.setJoinDate(rs.getDate("joindate"));
 				int departmentId = rs.getInt("department");
-
+				employee.setDepartment(departmentDao.findById(departmentId));
 			}
-			// TODO Wait until creation of DepartmentDaoImpl and findById
-			// method in it.
-			// Then use this method to get the department object here
-			// employee.setDepartment(departmetDaoImpl.findById(departmentId));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -96,27 +91,21 @@ public class EmployeeDaoImpl implements EmployeeDao {
 				employee.setFullTime(rs.getBoolean("fulltime"));
 				employee.setJoinDate(rs.getDate("joindate"));
 				int departmentId = rs.getInt("department");
-				// TODO
-				// employee.setDepartment(departmetDaoImpl.findById(departmentId));
+				employee.setDepartment(departmentDao.findById(departmentId));
+
 				employees.add(employee);
 			}
-			// TODO Wait until creation of DepartmentDaoImpl and findById
-			// method in it.
-			// Then use this method to get the department object here
-			// employee.setDepartment(departmetDaoImpl.findById(departmentId));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return employees;
-
 	}
 
 	@Override
 	public boolean save(Employee employee) {
-
-		// TODO: get departmentid from DepartmentDaoImpl based on the department
-		// name findByName
-		// int departmentId;
+		// get the departmentId from database to save it in the employee table
+		Department department = departmentDao.findByName(employee.getDepartment().getName());
+		int departmentId = department.getId();
 		String sql = "Insert into employee(firstname,lastname,email,age,salary,fulltime,joindate,department)"
 				+ "values(? ,? ,? ,? ,? ,? ,? ,? )";
 		PreparedStatement stmt = null;
@@ -129,10 +118,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
 			stmt.setDouble(5, employee.getSalary());
 			stmt.setBoolean(6, employee.isFullTime());
 			stmt.setDate(7, (Date) employee.getJoinDate());
-			// TODO :stmt.setInt(8, departmentId);
+			stmt.setInt(8, departmentId);
 			if (stmt.executeUpdate(sql) > 0)
 				return true;
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -160,10 +148,10 @@ public class EmployeeDaoImpl implements EmployeeDao {
 				+ "set firstname=?,lastname=?,email=?,age=?,salary=?,fulltime=?,joindate=?,department=?"
 				+ " where id =? ";
 		PreparedStatement stmt = null;
-
+		Department department = departmentDao.findByName(employee.getDepartment().getName());
+		int departmentId = department.getId();
 		try {
 			stmt = DatabaseConnectionFactory.getConnection().prepareStatement(sql);
-
 			stmt.setString(1, employee.getFirstName());
 			stmt.setString(2, employee.getLastName());
 			stmt.setString(3, employee.getEmail());
@@ -171,15 +159,11 @@ public class EmployeeDaoImpl implements EmployeeDao {
 			stmt.setDouble(5, employee.getSalary());
 			stmt.setBoolean(6, employee.isFullTime());
 			stmt.setDate(7, (Date) employee.getJoinDate());
-			// TODO :stmt.setInt(8, departmentId);
-			// TODO: get departmentid from DepartmentDaoImpl based on the
-			// department
-			// name findByName()
+			stmt.setInt(8, departmentId);
 			stmt.setInt(9, employee.getId());
 			if (stmt.executeUpdate(sql) > 0)
 				return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
