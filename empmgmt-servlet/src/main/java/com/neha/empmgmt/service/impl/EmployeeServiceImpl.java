@@ -8,41 +8,35 @@ import com.neha.empmgmt.model.Employee;
 import com.neha.empmgmt.service.EmployeeService;
 
 public class EmployeeServiceImpl implements EmployeeService {
+	private EmployeeDao employeeDao = new EmployeeDaoImpl();
 
 	@Override
 	public Employee findById(int id) {
-		EmployeeDao employeeDao = new EmployeeDaoImpl();
 		return employeeDao.findById(id);
 	}
 
 	@Override
 	public Employee findByEmail(String email) {
-		// TODO Auto-generated method stub
-		return null;
+		return employeeDao.findByEmail(email);
 	}
 
 	@Override
 	public List<Employee> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return employeeDao.findAll();
 	}
 
 	@Override
 	public boolean save(Employee employee) {
-		// TODO Auto-generated method stub
-		return false;
+		return employeeDao.save(employee);
 	}
 
 	@Override
 	public boolean deleteById(int id) {
-		// TODO Auto-generated method stub
-		return false;
+		return employeeDao.deleteById(id);
 	}
 
 	@Override
 	public boolean update(Employee employee) {
-		// TODO Auto-generated method stub
-		return false;
+		return employeeDao.update(employee);
 	}
-
 }
