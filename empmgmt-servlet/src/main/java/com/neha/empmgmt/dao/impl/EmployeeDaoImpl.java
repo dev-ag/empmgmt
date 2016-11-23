@@ -169,4 +169,18 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		return false;
 	}
 
+	@Override
+	public boolean deleteAll() {
+		String sql = "Delete from employee";
+		Statement stmt = null;
+		try {
+			stmt = DatabaseConnectionFactory.getConnection().createStatement();
+			if (stmt.executeUpdate(sql) > 0)
+				return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 }

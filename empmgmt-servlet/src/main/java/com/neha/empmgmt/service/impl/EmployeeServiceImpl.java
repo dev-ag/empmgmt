@@ -39,4 +39,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public boolean update(Employee employee) {
 		return employeeDao.update(employee);
 	}
+
+	@Override
+	public boolean deleteAll() {
+		return employeeDao.deleteAll();
+	}
 }
