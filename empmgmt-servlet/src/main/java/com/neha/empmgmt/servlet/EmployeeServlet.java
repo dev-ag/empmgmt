@@ -17,45 +17,52 @@ import com.neha.empmgmt.model.Employee;
 import com.neha.empmgmt.service.EmployeeService;
 import com.neha.empmgmt.service.impl.EmployeeServiceImpl;
 
-@WebServlet(urlPatterns = "/employees.html")
+@WebServlet(urlPatterns = "/employee.html")
 public class EmployeeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private EmployeeService employeeService = new EmployeeServiceImpl();
-	
+
 	@Override
 	public void init(ServletConfig servletConfig) throws ServletException {
 		super.init(servletConfig);
-		System.out.println(servletConfig.getServletName()+" initialized..");
+		System.out.println(servletConfig.getServletName() + " initialized..");
 	}
-	
+
 	@Override
-	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("Service method called for "+request.getRequestURI());
-		//Routing bases on the HttpMethod type and also based on a paramter called action that will be present in the url in case that is not form submit.
-		// e.g. for a delete operation url = http://localhost:8080/employees.html?id=123&action=delete
-		// e.g. for a update operation url = http://localhost:8080/employees.html?id=123&action=update
+	protected void service(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		System.out.println("Service method called for " + request.getRequestURI());
+		// Routing bases on the HttpMethod type and also based on a paramter
+		// called action that will be present in the url in case that is not
+		// form submit.
+		// e.g. for a delete operation url =
+		// http://localhost:8080/employees.html?id=123&action=delete
+		// e.g. for a update operation url =
+		// http://localhost:8080/employees.html?id=123&action=update
 		// POST and PUT would normally be handled via form submit.
-		if(request.getMethod().equalsIgnoreCase(HttpMethod.POST) || 
-				(request.getParameter("action") != null && request.getParameter("action").equalsIgnoreCase("add"))){
+		if (request.getMethod().equalsIgnoreCase(HttpMethod.POST)
+				|| (request.getParameter("add") != null && request.getParameter("add").equalsIgnoreCase("Add"))) {
 			doPost(request, response);
-		} else if (request.getMethod().equalsIgnoreCase(HttpMethod.DELETE) || 
-				(request.getParameter("action") != null && request.getParameter("action").equalsIgnoreCase("delete"))){
+		} else if (request.getMethod().equalsIgnoreCase(HttpMethod.DELETE) || (request.getParameter("action") != null
+				&& request.getParameter("action").equalsIgnoreCase("delete"))) {
 			doDelete(request, response);
-		} else if (request.getMethod().equalsIgnoreCase(HttpMethod.PUT) || 
-				(request.getParameter("action") != null && request.getParameter("action").equalsIgnoreCase("update"))){
+		} else if (request.getMethod().equalsIgnoreCase(HttpMethod.PUT) || (request.getParameter("action") != null
+				&& request.getParameter("action").equalsIgnoreCase("update"))) {
 			doDelete(request, response);
 		} else if (request.getMethod().equalsIgnoreCase(HttpMethod.PUT)) {
 			doGet(request, response);
 		} else {
-			if(request.getParameter("action") != null){
-				throw new RuntimeException(request.getMethod() + " is not supported for action = "+request.getParameter("action"));
+			if (request.getParameter("action") != null) {
+				throw new RuntimeException(
+						request.getMethod() + " is not supported for action = " + request.getParameter("action"));
 			}
 			throw new RuntimeException(request.getMethod() + " is not supported");
 		}
 	}
 
 	@Override
-	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// Write logic to handle delete of an employee / employees
 		// Check to see if id is present in the url = > deleteById
 		// If id is not present => deleteAll
@@ -64,15 +71,18 @@ public class EmployeeServlet extends HttpServlet {
 			isDeleted = employeeService.deleteById(Integer.parseInt(request.getParameter("id")));
 
 		} else {
-			//TODO: instead of deleteAll, display the message that employee not found/could not delete
+			// TODO: instead of deleteAll, display the message that employee not
+			// found/could not delete
 			isDeleted = employeeService.deleteAll();
 		}
-		// TODO: Display message in UI that the EmployeeWithID/Employees deleted successfully
+		// TODO: Display message in UI that the EmployeeWithID/Employees deleted
+		// successfully
 		// OR show the updated result by doing a findAll().
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// Write logic to handle get employee / employees
 		// Check to see if id is present in the url => getById
 		// if id is not present => findAll
@@ -83,12 +93,14 @@ public class EmployeeServlet extends HttpServlet {
 			// TODO :return appropriate response;
 		} else {
 			List<Employee> employees = employeeService.findAll();
-			// TODO :return appropriate response;
+			request.setAttribute("employee", employees);
+			request.getRequestDispatcher("WEB-INF/views/employeelist.jsp").forward(request,response);
 		}
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// write logic to post employee / employees
 		// get all the employee parameters and make employee object
 		// call save()
@@ -105,13 +117,20 @@ public class EmployeeServlet extends HttpServlet {
 		department.setName(request.getParameter("department"));
 		employee.setDepartment(department);
 		isSaved = employeeService.save(employee);
-
+		if(isSaved){
+			System.out.println("Successfully saved the employee" + request.getParameter("firstname")+ "  to the database......");
+			this.doGet(request, response);
+		}
+		else{
+			System.out.println("Failed to save the employee........");
+		}
 		// TODO: Display message in UI that the Employee is saved successfully
 		// OR show the saved result by doing a findAll().
 	}
 
 	@Override
-	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPut(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// write logic to update employee / employees
 		// get all employee parameters and make employee object
 		// update()
@@ -133,7 +152,7 @@ public class EmployeeServlet extends HttpServlet {
 		// TODO: Display message in UI that the Employee is updated successfully
 		// OR show the updated result by doing a findAll().
 	}
-	
+
 	@Override
 	public void destroy() {
 		System.out.println("Servlet getting destroyed");
