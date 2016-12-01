@@ -21,7 +21,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
 		try {
 			stmt = DatabaseConnectionFactory.getConnection().prepareStatement(sql);
 			stmt.setInt(1, id);
-			ResultSet rs = stmt.executeQuery(sql);
+			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				department.setId(rs.getInt("id"));
 				department.setName(rs.getString("name"));
@@ -40,7 +40,8 @@ public class DepartmentDaoImpl implements DepartmentDao {
 		try {
 			stmt = DatabaseConnectionFactory.getConnection().prepareStatement(sql);
 			stmt.setString(1, name);
-			ResultSet rs = stmt.executeQuery(sql);
+			System.out.println(sql);
+			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				department.setId(rs.getInt("id"));
 				department.setName(rs.getString("name"));
@@ -78,7 +79,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
 		try {
 			stmt = DatabaseConnectionFactory.getConnection().prepareStatement(sql);
 			stmt.setString(1, department.getName());
-			if (stmt.executeUpdate(sql) > 0)
+			if (stmt.executeUpdate() > 0)
 				return true;
 
 		} catch (SQLException e) {
@@ -94,7 +95,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
 		try {
 			stmt = DatabaseConnectionFactory.getConnection().prepareStatement(sql);
 			stmt.setInt(1, id);
-			if (stmt.executeUpdate(sql) > 0)
+			if (stmt.executeUpdate() > 0)
 				return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -112,7 +113,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
 
 			stmt.setString(1, department.getName());
 			stmt.setInt(2, department.getId());
-			if (stmt.executeUpdate(sql) > 0)
+			if (stmt.executeUpdate() > 0)
 				return true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

@@ -16,4 +16,6 @@ public interface EmployeeService {
 	boolean deleteById(int id);
 
 	boolean update(Employee employee);
+
+	boolean deleteAll();
 }

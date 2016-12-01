@@ -25,7 +25,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		try {
 			stmt = DatabaseConnectionFactory.getConnection().prepareStatement(sql);
 			stmt.setInt(1, id);
-			ResultSet rs = stmt.executeQuery(sql);
+			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				employee.setId(rs.getInt("id"));
 				employee.setFirstName(rs.getString("firstname"));
@@ -52,7 +52,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		try {
 			stmt = DatabaseConnectionFactory.getConnection().prepareStatement(sql);
 			stmt.setString(1, email);
-			ResultSet rs = stmt.executeQuery(sql);
+			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				employee.setId(rs.getInt("id"));
 				employee.setFirstName(rs.getString("firstname"));
@@ -107,7 +107,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		Department department = departmentDao.findByName(employee.getDepartment().getName());
 		int departmentId = department.getId();
 		String sql = "Insert into employee(firstname,lastname,email,age,salary,fulltime,joindate,department)"
-				+ "values(? ,? ,? ,? ,? ,? ,? ,? )";
+				+ "values(?,?,?,?,?,?,?,?)";
 		PreparedStatement stmt = null;
 		try {
 			stmt = DatabaseConnectionFactory.getConnection().prepareStatement(sql);
@@ -119,7 +119,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
 			stmt.setBoolean(6, employee.isFullTime());
 			stmt.setDate(7, (Date) employee.getJoinDate());
 			stmt.setInt(8, departmentId);
-			if (stmt.executeUpdate(sql) > 0)
+			System.out.println(sql);
+
+			if (stmt.executeUpdate() > 0)
 				return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -134,7 +136,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		try {
 			stmt = DatabaseConnectionFactory.getConnection().prepareStatement(sql);
 			stmt.setInt(1, id);
-			if (stmt.executeUpdate(sql) > 0)
+			if (stmt.executeUpdate() > 0)
 				return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -161,6 +163,20 @@ public class EmployeeDaoImpl implements EmployeeDao {
 			stmt.setDate(7, (Date) employee.getJoinDate());
 			stmt.setInt(8, departmentId);
 			stmt.setInt(9, employee.getId());
+			if (stmt.executeUpdate() > 0)
+				return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean deleteAll() {
+		String sql = "Delete from employee";
+		Statement stmt = null;
+		try {
+			stmt = DatabaseConnectionFactory.getConnection().createStatement();
 			if (stmt.executeUpdate(sql) > 0)
 				return true;
 		} catch (SQLException e) {
