@@ -8,8 +8,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.neha.empmgmt.model.Employee;
-
 @WebServlet(urlPatterns = "/welcome.do")
 public class WelcomeServlet extends HttpServlet {
 
