@@ -10,8 +10,8 @@ public class DatabaseConnectionFactory {
 	static final String DB_URL = "jdbc:mysql://localhost/empmgmt";
 	private static Connection connection;
 	// Database credentials
-	static final String USER = "neha";
-	static final String PASS = "1234";
+	static final String USER = "root";
+	static final String PASS = "password";
 
 	public static Connection getConnection() {
 		if (connection == null) {

@@ -52,11 +52,32 @@ public class DepartmentsServlet extends HttpServlet {
 			throw new RuntimeException(request.getMethod() + " is not supported");
 		}
 	}
-
+	
+	/**
+	 * This method is performing dual duty. 1. If an action is specified, it will merely re-route to add/edit page
+	 * In case of edit, it will also populate the page with data.
+	 * If action is not present and id is present => findById
+	 * If action if not present and id is also not present => findAll.
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//Check if parameter name action is present
+		String action = request.getParameter("action");
 		//Step 1: Get the id from the request param
 		String id = request.getParameter("id");
+		if(action != null){
+			//This means we have to merely forward it to appropriate page
+			if(action.equalsIgnoreCase("ADD")){
+				request.getRequestDispatcher("WEB-INF/views/department.jsp?action=add").forward(request,response);
+				return;
+			} else if(action.equalsIgnoreCase("edit")){
+				//find the department by id to edit
+				Department departmentToEdit = departmentService.findById(Integer.parseInt(id));
+				request.setAttribute("department", departmentToEdit);
+				request.getRequestDispatcher("WEB-INF/views/department.jsp?action=edit&id="+id).forward(request,response);
+				return;
+			}
+		}
 		//Step 2: If id is present => findById
 		if(id != null){
 			Department department = departmentService.findById(Integer.parseInt(id));
