@@ -39,4 +39,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 	public boolean update(Department department) {
 		return departmentDao.update(department);
 	}
+
+	@Override
+	public boolean deleteAll() {
+		return departmentDao.deleteAll();
+	}
 }

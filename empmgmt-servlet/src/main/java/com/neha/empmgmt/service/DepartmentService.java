@@ -14,6 +14,8 @@ public interface DepartmentService {
 	boolean save(Department department);
 
 	boolean deleteById(int id);
+	
+	boolean deleteAll();
 
 	boolean update(Department department);
 

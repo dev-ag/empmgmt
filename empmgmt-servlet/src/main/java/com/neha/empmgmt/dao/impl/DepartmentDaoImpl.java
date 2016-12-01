@@ -121,5 +121,20 @@ public class DepartmentDaoImpl implements DepartmentDao {
 		}
 		return false;
 	}
+	
+	@Override
+	public boolean deleteAll(){
+		String sql = "Delete from department";
+		PreparedStatement stmt = null;
+		try {
+			stmt = DatabaseConnectionFactory.getConnection().prepareStatement(sql);
+			if (stmt.executeUpdate() > 0)
+				return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 }
