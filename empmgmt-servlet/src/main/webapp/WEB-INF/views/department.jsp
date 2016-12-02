@@ -9,6 +9,13 @@
 </head>
 <body>
 	<div><strong><c:out value= "${param.action}"/></strong> a department</div>
+	<c:if test="${not empty errors}">
+	<ul>
+	<c:forEach var="error" items="${errors}" varStatus="counter">
+		<li>${error}</li>
+	</c:forEach>
+	</ul>
+	</c:if>
 	<form action="departments.html?action=${param.action}" method="POST">
 		<input type="hidden" name="id" value="${department.id}"></input>
 		<input type="text" name="name" value="${department.name}"></input>

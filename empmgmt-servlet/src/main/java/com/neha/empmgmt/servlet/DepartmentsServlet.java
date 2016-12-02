@@ -1,8 +1,3 @@
-/**
- * © 2016 Early Warning Services, LLC.
- * All Rights Reserved.
- * Confidential and proprietary.
- */
 package com.neha.empmgmt.servlet;
 
 import java.io.IOException;
@@ -19,12 +14,15 @@ import javax.ws.rs.HttpMethod;
 import com.neha.empmgmt.model.Department;
 import com.neha.empmgmt.service.DepartmentService;
 import com.neha.empmgmt.service.impl.DepartmentServiceImpl;
+import com.neha.empmgmt.validator.Validator;
+import com.neha.empmgmt.validator.impl.DepartmentValidator;
 
 @WebServlet(urlPatterns = "/departments.html")
 public class DepartmentsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private DepartmentService departmentService = new DepartmentServiceImpl();
+	private Validator<Department> departmentValidator = new DepartmentValidator();
 	
 	@Override
 	public void init(ServletConfig servletConfig) throws ServletException {
@@ -121,7 +119,13 @@ public class DepartmentsServlet extends HttpServlet {
 		Department department = new Department();
 		department.setName(request.getParameter("name"));
 		//TODO: Step 2: Validate the input parameters
-		
+		List<String> errors = departmentValidator.validate(department);
+		if(errors.size() > 0){
+			//This means validation had errors
+			request.setAttribute("errors", errors);
+			request.getRequestDispatcher("WEB-INF/views/department.jsp?action=add").forward(request,response);
+			return;
+		}
 		//Step 3: Now call appropriate service method to save this department object
 		boolean saved = departmentService.save(department);
 		if(saved)
@@ -140,7 +144,14 @@ public class DepartmentsServlet extends HttpServlet {
 		department.setId(Integer.parseInt(request.getParameter("id")));
 		department.setName(request.getParameter("name"));
 		//Step 2: Validate the input parameters
-		
+		List<String> errors = departmentValidator.validate(department);
+		if(errors.size() > 0){
+			//This means validation had errors
+			request.setAttribute("errors", errors);
+			request.setAttribute("department", department);
+			request.getRequestDispatcher("WEB-INF/views/department.jsp?action=edit&id="+request.getParameter("id")).forward(request,response);
+			return;
+		}
 		//Step 3: Now call appropriate service method to update this department object
 		boolean updated = departmentService.update(department);
 		if(updated)
