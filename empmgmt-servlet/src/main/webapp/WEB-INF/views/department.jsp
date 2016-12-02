@@ -5,13 +5,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Employee Portal : <c:out value= "${action}"/> Department</title>
+<title>Employee Portal : <c:out value= "${param.action}"/> Department</title>
 </head>
 <body>
-	<div><strong><c:out value= "${action}"/></strong> a department</div>
-	<form action="departments.html" method="POST">
+	<div><strong><c:out value= "${param.action}"/></strong> a department</div>
+	<form action="departments.html?action=${param.action}" method="POST">
+		<input type="hidden" name="id" value="${department.id}"></input>
 		<input type="text" name="name" value="${department.name}"></input>
-		<input type="submit" value="Add Department" name="addDepartmentBtn">
+		<input type="submit" value="${param.action} Department" name="addDepartmentBtn">
 	</form>
 </body>
 </html>

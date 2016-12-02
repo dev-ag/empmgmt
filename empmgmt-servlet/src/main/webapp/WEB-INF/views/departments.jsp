@@ -8,7 +8,17 @@
 <title>Employee Portal : Departments</title>
 </head>
 <body>
+	<a href="departments.html?action=add">Add a department</a>
 	<div>Listing departments:</div>
+	<c:if test="${param.added}">
+		<div>Department was added successfully.</div>
+	</c:if>
+	<c:if test="${param.updated}">
+		<div>Department was updated successfully.</div>
+	</c:if>
+	<c:if test="${param.deleted}">
+		<div>The delete operation was successful.</div>
+	</c:if>
 	<c:if test="${not empty departments}">
 		<table>
 			<tr><th>S.No.</th><th>Name</th><th>Action</th></tr>

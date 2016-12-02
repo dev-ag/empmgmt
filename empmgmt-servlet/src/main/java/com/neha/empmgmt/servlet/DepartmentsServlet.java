@@ -35,49 +35,73 @@ public class DepartmentsServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Service method called for " + request.getRequestURI());
+		String action = request.getParameter("action");
+		//If the method is GET, simply route to doGet
 		if (request.getMethod().equalsIgnoreCase(HttpMethod.GET)) {
 			doGet(request, response);
-		} else if (request.getMethod().equalsIgnoreCase(HttpMethod.POST)) {
-			doPost(request, response);
-		} else if (request.getMethod().equalsIgnoreCase(HttpMethod.PUT)) {
+		} 
+		//If the method is POST, check if it is Add or Edit
+		//Add would mean doPost -> A new entry will be created. POST is equivalent to SAVE.
+		//Edit would mean doPut - > PUT is equivalent to Update
+		else if (request.getMethod().equalsIgnoreCase(HttpMethod.POST)) {
+			if(action != null & action.equalsIgnoreCase("add")){
+				doPost(request, response);
+			} else if(action != null & action.equalsIgnoreCase("edit")){
+				doPut(request, response);
+			} else {
+				throw new RuntimeException(request.getMethod() + " is not supported for action="+action);
+			}
+			
+		} 
+		//If the update request came via form and method type = PUT
+		else if (request.getMethod().equalsIgnoreCase(HttpMethod.PUT)) {
 			doPut(request, response);
-		} else if (request.getMethod().equalsIgnoreCase(HttpMethod.DELETE) || (request.getParameter("action") != null
-				&& request.getParameter("action").equalsIgnoreCase("delete"))) {
+		} 
+		//Delete via form or action = delete
+		else if (request.getMethod().equalsIgnoreCase(HttpMethod.DELETE) || (action != null
+				&& action.equalsIgnoreCase("delete"))) {
 			doDelete(request, response);
 		} else {
-			if (request.getParameter("action") != null) {
+			if (action != null) {
 				throw new RuntimeException(
-						request.getMethod() + " is not supported for action = " + request.getParameter("action"));
+						request.getMethod() + " is not supported for action = " + action);
 			}
 			throw new RuntimeException(request.getMethod() + " is not supported");
 		}
 	}
 	
 	/**
-	 * This method is performing dual duty. 1. If an action is specified, it will merely re-route to add/edit page
+	 * This method is performing dual duty. 1. If an action is specified, it will merely re-route to add/edit/delete page
 	 * In case of edit, it will also populate the page with data.
 	 * If action is not present and id is present => findById
 	 * If action if not present and id is also not present => findAll.
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Check if parameter name action is present
+		//Step 1: Check if parameter name action is present
 		String action = request.getParameter("action");
-		//Step 1: Get the id from the request param
+		//Step 2: Get the id from the request param
 		String id = request.getParameter("id");
+		//Step 3: evaluate action
 		if(action != null){
 			//This means we have to merely forward it to appropriate page
 			if(action.equalsIgnoreCase("ADD")){
+				//forward to add page
 				request.getRequestDispatcher("WEB-INF/views/department.jsp?action=add").forward(request,response);
 				return;
 			} else if(action.equalsIgnoreCase("edit")){
 				//find the department by id to edit
 				Department departmentToEdit = departmentService.findById(Integer.parseInt(id));
 				request.setAttribute("department", departmentToEdit);
+				//forward to edit page
 				request.getRequestDispatcher("WEB-INF/views/department.jsp?action=edit&id="+id).forward(request,response);
 				return;
+			} else if(action.equalsIgnoreCase("delete")){
+				//simply delegate to doDelete to delete
+				doDelete(request, response);
+				return;
 			}
-		}
+		} 
 		//Step 2: If id is present => findById
 		if(id != null){
 			Department department = departmentService.findById(Integer.parseInt(id));
@@ -96,7 +120,7 @@ public class DepartmentsServlet extends HttpServlet {
 		//Step 1: Read httpServletRequest and populate department Object from the form values
 		Department department = new Department();
 		department.setName(request.getParameter("name"));
-		//Step 2: Validate the input parameters
+		//TODO: Step 2: Validate the input parameters
 		
 		//Step 3: Now call appropriate service method to save this department object
 		boolean saved = departmentService.save(department);
@@ -105,8 +129,7 @@ public class DepartmentsServlet extends HttpServlet {
 		else
 			System.out.println("Failed to save Department "+department.getName());
 		//Step 4: set a attribute in the response which can be fetched in the JSP and a message can be displayed
-		request.setAttribute("saved", saved);
-		request.getRequestDispatcher("WEB-INF/views/departments.jsp").forward(request,response);
+		response.sendRedirect("departments.html?added=true");
 	}
 
 	@Override
@@ -125,8 +148,7 @@ public class DepartmentsServlet extends HttpServlet {
 		else
 			System.out.println("Failed to update Department "+department.getName());
 		//Step 4: set a attribute in the response which can be fetched in the JSP and a message can be displayed
-		request.setAttribute("updated", updated);
-		request.getRequestDispatcher("WEB-INF/views/departments.jsp").forward(request,response);
+		response.sendRedirect("departments.html?updated=true");
 	}
 	
 	@Override
@@ -135,15 +157,12 @@ public class DepartmentsServlet extends HttpServlet {
 		String id = request.getParameter("id");
 		//Step 2: If id is present => deleteById
 		if(id != null){
-			boolean deleted = departmentService.deleteById(Integer.parseInt(id));
-			request.setAttribute("deleted", deleted);
-			request.getRequestDispatcher("WEB-INF/views/departments.jsp").forward(request,response);
+			departmentService.deleteById(Integer.parseInt(id));
 		} else {
 			//findAll
-			boolean deleted = departmentService.deleteAll();
-			request.setAttribute("deleted", deleted);
-			request.getRequestDispatcher("WEB-INF/views/departments.jsp").forward(request,response);
+			departmentService.deleteAll();
 		}
+		response.sendRedirect("departments.html?deleted=true");
 	}
 	
 	@Override
