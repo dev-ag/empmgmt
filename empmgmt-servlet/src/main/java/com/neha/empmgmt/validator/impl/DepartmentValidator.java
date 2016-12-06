@@ -1,8 +1,3 @@
-/**
- * © 2016 Early Warning Services, LLC.
- * All Rights Reserved.
- * Confidential and proprietary.
- */
 package com.neha.empmgmt.validator.impl;
 
 import java.util.ArrayList;

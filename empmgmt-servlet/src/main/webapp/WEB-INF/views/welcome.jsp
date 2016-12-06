@@ -18,9 +18,9 @@
 
 	<p>Select following to access the employee OR department
 		information:</p>
-	<form action="/welcome.do" method="post">
+	<form action="/empmgmt-servlet/welcome.html">
 		<input type="submit" value="Employee" name=employee> <input
-			type="button" value="Department" name=department>
+			type="submit" value="Department" name=department>
 	</form>
 
 </body>
