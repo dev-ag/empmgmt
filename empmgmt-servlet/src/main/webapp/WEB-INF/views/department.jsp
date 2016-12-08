@@ -5,21 +5,50 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Employee Portal : <c:out value= "${param.action}"/> Department</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+<!-- Latest compiled and minified JavaScript -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	crossorigin="anonymous"></script>
+<title>Employee Portal : <c:out value="${param.action}" />
+	Department
+</title>
 </head>
-<body>
-	<div><strong><c:out value= "${param.action}"/></strong> a department</div>
+<body class="container">
+	<div>
+		<h2>
+			<c:out value="${param.action}" />
+			a department
+		</h2>
+	</div>
 	<c:if test="${not empty errors}">
-	<ul>
-	<c:forEach var="error" items="${errors}" varStatus="counter">
-		<li>${error}</li>
-	</c:forEach>
-	</ul>
+		<div class="col-sm-6 alert alert-danger" role="alert">
+			<ul>
+				<c:forEach var="error" items="${errors}" varStatus="counter">
+					<li>${error}</li>
+				</c:forEach>
+			</ul>
+		</div>
 	</c:if>
-	<form action="departments.html?action=${param.action}" method="POST">
-		<input type="hidden" name="id" value="${department.id}"></input>
-		<input type="text" name="name" value="${department.name}"></input>
-		<input type="submit" value="${param.action} Department" name="addDepartmentBtn">
-	</form>
+	<div class="col-sm-8">
+		<form class="form-inline"
+			action="departments.html?action=${param.action}" method="POST">
+			<div class="form-group">
+				<input type="hidden" name="id" value="${department.id}"></input> <label
+					for="name">Name</label> <input type="text" class="form-control"
+					id="name" name="name" placeholder="Enter department name"
+					value="${department.name}">
+			</div>
+			<button type="submit" class="btn btn-success">
+				<c:out value="${param.action}" />
+				Department
+			</button>
+		</form>
+	</div>
 </body>
 </html>
