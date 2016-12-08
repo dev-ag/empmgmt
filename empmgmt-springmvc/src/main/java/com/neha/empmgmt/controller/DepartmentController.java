@@ -2,7 +2,6 @@ package com.neha.empmgmt.controller;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -21,35 +20,50 @@ public class DepartmentController {
 	private DepartmentService departmentService;
 	
 	@RequestMapping(path="/departments", method = RequestMethod.GET)
-	public String find(@RequestParam (required = false) String id, ModelMap modelMap){
-		if(StringUtils.isEmpty(id)){
-			List<Department> departments = departmentService.findAll();
-			modelMap.addAttribute("departments", departments);
-			return "departments";
-		}
-		Department department = departmentService.findById(Integer.parseInt(id));
-		modelMap.addAttribute("department", department);
-		return "department";
-	}
-	
-	@RequestMapping(path="/departments/add", method = RequestMethod.GET)
-	public String showAddPage(ModelMap modelMap){
-		return "department";
+	public String showAddFormAndListDepartments(ModelMap modelMap){
+		//set model for add part of the page
+		modelMap.addAttribute("department", new Department());
+		//findall departments
+		List<Department> departments = departmentService.findAll();
+		//set model for the list
+		modelMap.addAttribute("departments", departments);
+		return "departments";
 	}
 	
 	@RequestMapping(path="/departments/add", method = RequestMethod.POST)
-	public String save(@ModelAttribute("department") Department department, ModelMap modelMap){
-		boolean added = departmentService.save(department);
-		if(added){
+	public String saveOrUpdate(@ModelAttribute("department") Department department, ModelMap modelMap){
+		if(department.getId() == 0){
+			//new department hence add it
+			departmentService.save(department);
 			return "redirect:/departments?added=true";
+		} else {
+			//update it
+			departmentService.update(department);
+			return "redirect:/departments?updated=true";
 		}
-		return "redirect:/departments";
 	}
 	
 	@RequestMapping(path="/departments/edit", method = RequestMethod.GET)
-	public String showEditPage(@RequestParam (required = true) String id, ModelMap modelMap){
+	public String populateEditFormAndListDepartments(@RequestParam (required = true) String id, ModelMap modelMap){
 		Department department = departmentService.findById(Integer.parseInt(id));
+		//set model for add part of the page
 		modelMap.addAttribute("department", department);
-		return "department";
+		//findall departments
+		List<Department> departments = departmentService.findAll();
+		//set model for the list
+		modelMap.addAttribute("departments", departments);
+		return "departments";
+	}
+	
+	@RequestMapping(path="/departments/delete", method = RequestMethod.GET)
+	public String removeById(@RequestParam (required = true) String id, ModelMap modelMap){
+		departmentService.deleteById(Integer.parseInt(id));
+		//set model for add part of the page
+		modelMap.addAttribute("department", new Department());
+		//findall departments
+		List<Department> departments = departmentService.findAll();
+		//set model for the list
+		modelMap.addAttribute("departments", departments);
+		return "redirect:/departments?deleted=true";
 	}
 }

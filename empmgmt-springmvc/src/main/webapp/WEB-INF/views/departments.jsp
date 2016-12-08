@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,7 +26,7 @@
 				class="btn btn-primary active" role="button">Back to Home</a>
 		</div>
 		<br />
-		<h2>Listing departments:</h2>
+		
 		<c:if test="${param.added}">
 			<div class="alert alert-success" role="alert">Department was
 				added successfully.</div>
@@ -38,6 +39,36 @@
 			<div class="alert alert-success" role="alert">The delete
 				operation was successful.</div>
 		</c:if>
+		
+		<c:if test="${not empty errors}">
+		<div class="col-sm-6 alert alert-danger" role="alert">
+			<ul>
+				<c:forEach var="error" items="${errors}" varStatus="counter">
+					<li>${error}</li>
+				</c:forEach>
+			</ul>
+		</div>
+		</c:if>
+		<!-- Add form -->
+		<div class="col-sm-12">
+			<form:form class="form-inline" action="departments/add" method="POST" modelAttribute="department">
+				<div class="form-group">
+					<!--  <input type="hidden" name="id" value="${department.id}"></input> -->
+					<label
+						for="name">Name</label> <input type="text" class="form-control"
+						id="name" name="name" placeholder="Enter department name"
+						value="${department.name}">
+				</div>
+				<button type="submit" class="btn btn-success">
+					<c:out value="${param.action}" />
+					Department
+				</button>
+			</form:form>
+		</div>
+		
+		<!-- Listing -->
+		<div class="col-sm-12">
+		<h2>Listing departments:</h2>
 		<c:if test="${not empty departments}">
 			<table class="table">
 				<tr>
@@ -51,8 +82,8 @@
 						<td>${counter.count}</td>
 						<td>${department.name}</td>
 						<td><a
-							href="departments.html?action=edit&id=${department.id}">Edit</a>
-							/ <a href="departments.html?action=delete&id=${department.id}">Delete</a></td>
+							href="departments/edit?id=${department.id}">Edit</a>
+							/ <a href="departments/delete?id=${department.id}">Delete</a></td>
 					</tr>
 				</c:forEach>
 				<tr></tr>
@@ -64,6 +95,7 @@
 				a department.
 			</div>
 		</c:if>
+		</div>
 	</div>
 </body>
 </html>
