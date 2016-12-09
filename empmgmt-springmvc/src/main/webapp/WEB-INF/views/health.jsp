@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>Employee Portal: Health check</title>
 </head>
 <body>
 	<h1>Employee management application is up and running.</h1>
