@@ -5,11 +5,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping(path="/health")
-public class HealthController {
+@RequestMapping(path={"/","/welcome"})
+public class WelcomeController {
 	
 	@RequestMapping(method=RequestMethod.GET)
-	public String health(){
-		return "health";
+	public String welcome(){
+		return "welcome";
 	}
 }

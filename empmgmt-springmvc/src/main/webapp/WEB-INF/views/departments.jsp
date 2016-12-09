@@ -20,9 +20,10 @@
 </head>
 <body>
 	<div class="container">
-		<div style="margin-top: 50px">
-		</div>
-		
+		<ol class="breadcrumb">
+		  <li><a href="welcome">Home</a></li>
+		  <li class="active"><a href="#">Manage departments</a></li>
+		</ol>
 		<c:if test="${param.added}">
 			<div class="alert alert-success" role="alert">Department was
 				added successfully.</div>

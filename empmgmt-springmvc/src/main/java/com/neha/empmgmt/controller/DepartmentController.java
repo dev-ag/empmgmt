@@ -14,12 +14,13 @@ import com.neha.empmgmt.model.Department;
 import com.neha.empmgmt.service.DepartmentService;
 
 @Controller
+@RequestMapping(path="/departments")
 public class DepartmentController {
 	
 	@Autowired
 	private DepartmentService departmentService;
 	
-	@RequestMapping(path="/departments", method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	public String showAddFormAndListDepartments(ModelMap modelMap){
 		//set model for add part of the page
 		modelMap.addAttribute("department", new Department());
@@ -32,7 +33,7 @@ public class DepartmentController {
 		return "departments";
 	}
 	
-	@RequestMapping(path="/departments/add", method = RequestMethod.POST)
+	@RequestMapping(path="/add", method = RequestMethod.POST)
 	public String saveOrUpdate(@ModelAttribute("department") Department department, ModelMap modelMap){
 		if(department.getId() == 0){
 			//new department hence add it
@@ -45,7 +46,7 @@ public class DepartmentController {
 		}
 	}
 	
-	@RequestMapping(path="/departments/edit", method = RequestMethod.GET)
+	@RequestMapping(path="/edit", method = RequestMethod.GET)
 	public String populateEditFormAndListDepartments(@RequestParam (required = true) String id, ModelMap modelMap){
 		Department department = departmentService.findById(Integer.parseInt(id));
 		//set model for add part of the page
@@ -59,7 +60,7 @@ public class DepartmentController {
 		return "departments";
 	}
 	
-	@RequestMapping(path="/departments/delete", method = RequestMethod.GET)
+	@RequestMapping(path="/delete", method = RequestMethod.GET)
 	public String removeById(@RequestParam (required = true) String id, ModelMap modelMap){
 		departmentService.deleteById(Integer.parseInt(id));
 		//set model for add part of the page
