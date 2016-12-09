@@ -4,8 +4,9 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css">
-	<script src="resources/bootstrap/js/bootstrap.min.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="<%= request.getContextPath() %>/resources/bootstrap/css/bootstrap.min.css">
+	<script src="<%= request.getContextPath() %>/resources/bootstrap/js/bootstrap.min.js"></script>
 	<title>Employee Portal</title>
 </head>
 <body>

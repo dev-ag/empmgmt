@@ -8,13 +8,13 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Employee Portal : Departments</title>
-	<link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css">
-	<script src="resources/bootstrap/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="<%= request.getContextPath() %>/resources/bootstrap/css/bootstrap.min.css">
+	<script src="<%= request.getContextPath() %>/resources/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
 	<div class="container">
 		<ol class="breadcrumb">
-		  <li><a href="welcome">Home</a></li>
+		  <li><a href="<%= request.getContextPath() %>/welcome">Home</a></li>
 		  <li class="active"><a href="#">Manage departments</a></li>
 		</ol>
 		<c:if test="${param.added}">
