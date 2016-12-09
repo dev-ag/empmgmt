@@ -21,11 +21,7 @@
 <body>
 	<div class="container">
 		<div style="margin-top: 50px">
-			<a href="add" class="btn btn-primary active"
-				role="button">Add a department</a> <a href="welcome.html"
-				class="btn btn-primary active" role="button">Back to Home</a>
 		</div>
-		<br />
 		
 		<c:if test="${param.added}">
 			<div class="alert alert-success" role="alert">Department was
@@ -36,8 +32,7 @@
 				updated successfully.</div>
 		</c:if>
 		<c:if test="${param.deleted}">
-			<div class="alert alert-success" role="alert">The delete
-				operation was successful.</div>
+			<div class="alert alert-success" role="alert">The department was deleted successfully.</div>
 		</c:if>
 		
 		<c:if test="${not empty errors}">
@@ -51,24 +46,23 @@
 		</c:if>
 		<!-- Add form -->
 		<div class="col-sm-12">
-			<form:form class="form-inline" action="departments/add" method="POST" modelAttribute="department">
+			<form:form class="form-inline" action="${pageContext.request.contextPath}/departments/add" method="POST" modelAttribute="department">
 				<div class="form-group">
-					<!--  <input type="hidden" name="id" value="${department.id}"></input> -->
+					<input type="hidden" name="id" value="${department.id}"></input>
 					<label
 						for="name">Name</label> <input type="text" class="form-control"
 						id="name" name="name" placeholder="Enter department name"
 						value="${department.name}">
 				</div>
 				<button type="submit" class="btn btn-success">
-					<c:out value="${param.action}" />
-					Department
+					<c:out value="${btnLabel}" />
 				</button>
 			</form:form>
 		</div>
 		
 		<!-- Listing -->
 		<div class="col-sm-12">
-		<h2>Listing departments:</h2>
+		<h3>Listing departments:</h3>
 		<c:if test="${not empty departments}">
 			<table class="table">
 				<tr>
@@ -82,8 +76,8 @@
 						<td>${counter.count}</td>
 						<td>${department.name}</td>
 						<td><a
-							href="departments/edit?id=${department.id}">Edit</a>
-							/ <a href="departments/delete?id=${department.id}">Delete</a></td>
+							href="${pageContext.request.contextPath}/departments/edit?id=${department.id}">Edit</a>
+							/ <a href="${pageContext.request.contextPath}/departments/delete?id=${department.id}">Delete</a></td>
 					</tr>
 				</c:forEach>
 				<tr></tr>
@@ -91,8 +85,7 @@
 		</c:if>
 		<c:if test="${empty departments}">
 			<div>
-				No departments to show. Please <a href="departments.html?action=add">add</a>
-				a department.
+				No departments to show. Please add a department.
 			</div>
 		</c:if>
 		</div>

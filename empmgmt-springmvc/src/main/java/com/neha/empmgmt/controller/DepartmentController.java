@@ -27,6 +27,8 @@ public class DepartmentController {
 		List<Department> departments = departmentService.findAll();
 		//set model for the list
 		modelMap.addAttribute("departments", departments);
+		//Show btnLabel dynamically
+		modelMap.addAttribute("btnLabel", "Add Department");
 		return "departments";
 	}
 	
@@ -52,6 +54,8 @@ public class DepartmentController {
 		List<Department> departments = departmentService.findAll();
 		//set model for the list
 		modelMap.addAttribute("departments", departments);
+		//Show btnLabel dynamically
+		modelMap.addAttribute("btnLabel", "Update Department");
 		return "departments";
 	}
 	
