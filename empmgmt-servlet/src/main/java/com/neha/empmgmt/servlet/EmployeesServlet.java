@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.HttpMethod;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.neha.empmgmt.model.Department;
 import com.neha.empmgmt.model.Employee;
 import com.neha.empmgmt.service.DepartmentService;
@@ -43,7 +45,10 @@ public class EmployeesServlet extends HttpServlet {
 		if (request.getMethod().equalsIgnoreCase(HttpMethod.GET)) {
 			doGet(request, response);
 		} else if (request.getMethod().equalsIgnoreCase(HttpMethod.POST)) {
-			if (action != null & action.equalsIgnoreCase("add")) {
+			if(StringUtils.isEmpty(action)){
+				//do a POST if no action => Add
+				doPost(request, response);
+			} else if (action != null & action.equalsIgnoreCase("add")) {
 				doPost(request, response);
 			} else if (action != null & action.equalsIgnoreCase("edit")) {
 				doPut(request, response);
@@ -57,6 +62,11 @@ public class EmployeesServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		List<Employee> employees = employeeService.findAll();
+		request.setAttribute("employees", employees);
+		departments = departmentService.findAll();
+		request.setAttribute("departments", departments);
+		request.setAttribute("btnLabel", "Add Employee");
 		String action = request.getParameter("action");
 		String id = request.getParameter("id");
 		if (action != null) {
@@ -64,12 +74,14 @@ public class EmployeesServlet extends HttpServlet {
 			request.setAttribute("departments", departments);
 
 			if (action.equalsIgnoreCase("add")) {
-				request.getRequestDispatcher("WEB-INF/views/employee.jsp?action=add").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/views/employees.jsp?action=add").forward(request, response);
 				return;
 			} else if (action.equalsIgnoreCase("edit") && id != null) {
 				Employee employeeToEdit = employeeService.findById(Integer.parseInt(id));
 				request.setAttribute("employee", employeeToEdit);
-				request.getRequestDispatcher("WEB-INF/views/employee.jsp?action=edit&id=" + id).forward(request,
+				//showing btnLable
+				request.setAttribute("btnLabel", "Update Employee");
+				request.getRequestDispatcher("WEB-INF/views/employees.jsp?action=edit&id=" + id).forward(request,
 						response);
 				return;
 			} else if (action.equalsIgnoreCase("delete") && id != null) {
@@ -82,8 +94,7 @@ public class EmployeesServlet extends HttpServlet {
 			request.getRequestDispatcher("WEB-INF/views/employees.jsp").forward(request, response);
 			return;
 		} else {
-			List<Employee> employees = employeeService.findAll();
-			request.setAttribute("employees", employees);
+			//findAll
 			request.getRequestDispatcher("WEB-INF/views/employees.jsp").forward(request, response);
 		}
 	}
@@ -113,7 +124,10 @@ public class EmployeesServlet extends HttpServlet {
 				departments = departmentService.findAll();
 				request.setAttribute("departments", departments);
 			}
-			request.getRequestDispatcher("WEB-INF/views/employee.jsp?action=add").forward(request, response);
+			//populate list on the page
+			List<Employee> employees = employeeService.findAll();
+			request.setAttribute("employees", employees);
+			request.getRequestDispatcher("WEB-INF/views/employees.jsp?action=add").forward(request, response);
 			return;
 		}
 		isSaved = employeeService.save(employee);
@@ -152,7 +166,10 @@ public class EmployeesServlet extends HttpServlet {
 				departments = departmentService.findAll();
 				request.setAttribute("departments", departments);
 			}
-			request.getRequestDispatcher("WEB-INF/views/employee.jsp?action=edit&id=" + request.getParameter("id"))
+			//populate list on the page
+			List<Employee> employees = employeeService.findAll();
+			request.setAttribute("employees", employees);
+			request.getRequestDispatcher("WEB-INF/views/employees.jsp?action=edit&id=" + request.getParameter("id"))
 					.forward(request, response);
 			return;
 		}
@@ -170,12 +187,11 @@ public class EmployeesServlet extends HttpServlet {
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String id = request.getParameter("id");
-		Boolean isDeleted = false;
 		// Step 2: If id is present => deleteById
 		if (id != null) {
-			isDeleted = employeeService.deleteById(Integer.parseInt(id));
+			employeeService.deleteById(Integer.parseInt(id));
 		} else {
-			isDeleted = employeeService.deleteAll();
+			employeeService.deleteAll();
 		}
 		response.sendRedirect("employees.html?deleted=true");
 	}

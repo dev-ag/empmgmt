@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.HttpMethod;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.neha.empmgmt.model.Department;
 import com.neha.empmgmt.service.DepartmentService;
 import com.neha.empmgmt.service.impl.DepartmentServiceImpl;
@@ -44,9 +46,13 @@ public class DepartmentsServlet extends HttpServlet {
 		// equivalent to SAVE.
 		// Edit would mean doPut - > PUT is equivalent to Update
 		else if (request.getMethod().equalsIgnoreCase(HttpMethod.POST)) {
-			if (action != null & action.equalsIgnoreCase("add")) {
+			if(StringUtils.isEmpty(action)){
+				//do a POST if no action => Add
 				doPost(request, response);
-			} else if (action != null & action.equalsIgnoreCase("edit")) {
+			}
+			else if (action != null && action.equalsIgnoreCase("add")) {
+				doPost(request, response);
+			} else if (action != null && action.equalsIgnoreCase("edit")) {
 				doPut(request, response);
 			} else {
 				throw new RuntimeException(request.getMethod() + " is not supported for action=" + action);
@@ -79,23 +85,30 @@ public class DepartmentsServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// Step 1: Check if parameter name action is present
+		//Step 1: We have only one page and will have to populate the list always so, get the list
+		List<Department> departments = departmentService.findAll();
+		request.setAttribute("departments", departments);
+		//Step 2: Set default label to the btn
+		request.setAttribute("btnLabel", "Add Department");
+		// Step 3: Check if parameter name action is present
 		String action = request.getParameter("action");
-		// Step 2: Get the id from the request param
+		// Step 4: Get the id from the request param
 		String id = request.getParameter("id");
-		// Step 3: evaluate action
+		// Step 5: evaluate action
 		if (action != null) {
-			// This means we have to merely forward it to appropriate page
+			// This means we have to show the page on add/edit mode or after delete
 			if (action.equalsIgnoreCase("ADD")) {
 				// forward to add page
-				request.getRequestDispatcher("WEB-INF/views/department.jsp?action=add").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/views/departments.jsp?action=add").forward(request, response);
 				return;
 			} else if (action.equalsIgnoreCase("edit")) {
 				// find the department by id to edit
 				Department departmentToEdit = departmentService.findById(Integer.parseInt(id));
 				request.setAttribute("department", departmentToEdit);
+				//showing btnLable
+				request.setAttribute("btnLabel", "Update Department");
 				// forward to edit page
-				request.getRequestDispatcher("WEB-INF/views/department.jsp?action=edit&id=" + id).forward(request,
+				request.getRequestDispatcher("WEB-INF/views/departments.jsp?action=edit&id=" + id).forward(request,
 						response);
 				return;
 			} else if (action.equalsIgnoreCase("delete")) {
@@ -104,15 +117,13 @@ public class DepartmentsServlet extends HttpServlet {
 				return;
 			}
 		}
-		// Step 2: If id is present => findById
+		// Step 6: If id is present => findById
 		if (id != null) {
 			Department department = departmentService.findById(Integer.parseInt(id));
 			request.setAttribute("department", department);
 			request.getRequestDispatcher("WEB-INF/views/departments.jsp?id=" + id).forward(request, response);
 		} else {
-			// findAll
-			List<Department> departments = departmentService.findAll();
-			request.setAttribute("departments", departments);
+			//findAll
 			request.getRequestDispatcher("WEB-INF/views/departments.jsp").forward(request, response);
 		}
 	}
@@ -129,7 +140,12 @@ public class DepartmentsServlet extends HttpServlet {
 		if (errors.size() > 0) {
 			// This means validation had errors
 			request.setAttribute("errors", errors);
-			request.getRequestDispatcher("WEB-INF/views/department.jsp?action=add").forward(request, response);
+			//populate list
+			List<Department> departments = departmentService.findAll();
+			request.setAttribute("departments", departments);
+			//showing btnLable
+			request.setAttribute("btnLabel", "Add Department");
+			request.getRequestDispatcher("WEB-INF/views/departments.jsp?action=add").forward(request, response);
 			return;
 		}
 		// Step 3: Now call appropriate service method to save this department
@@ -159,7 +175,9 @@ public class DepartmentsServlet extends HttpServlet {
 			// This means validation had errors
 			request.setAttribute("errors", errors);
 			request.setAttribute("department", department);
-			request.getRequestDispatcher("WEB-INF/views/department.jsp?action=edit&id=" + request.getParameter("id"))
+			//showing btnLable
+			request.setAttribute("btnLabel", "Update Department");
+			request.getRequestDispatcher("WEB-INF/views/departments.jsp?action=edit&id=" + request.getParameter("id"))
 					.forward(request, response);
 			return;
 		}

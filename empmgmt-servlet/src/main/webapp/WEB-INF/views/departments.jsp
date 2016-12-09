@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Employee Portal : Departments</title>
+<title>Employee Portal : Manage Departments</title>
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
 	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
@@ -19,13 +19,12 @@
 </head>
 <body>
 	<div class="container">
-		<div style="margin-top: 50px">
-			<a href="departments.html?action=add" class="btn btn-primary active"
-				role="button">Add a department</a> <a href="welcome.html"
-				class="btn btn-primary active" role="button">Back to Home</a>
-		</div>
+		<ol class="breadcrumb">
+		  <li><a href="welcome.html">Home</a></li>
+		  <li class="active"><a href="#">Manage departments</a></li>
+		</ol>
 		<br />
-		<h2>Listing departments:</h2>
+		<div>
 		<c:if test="${param.added}">
 			<div class="alert alert-success" role="alert">Department was
 				added successfully.</div>
@@ -35,9 +34,38 @@
 				updated successfully.</div>
 		</c:if>
 		<c:if test="${param.deleted}">
-			<div class="alert alert-success" role="alert">The delete
-				operation was successful.</div>
+			<div class="alert alert-success" role="alert">Department
+				was deleted successfully.</div>
 		</c:if>
+		<c:if test="${not empty errors}">
+			<div class="col-sm-6 alert alert-danger" role="alert">
+				<ul>
+					<c:forEach var="error" items="${errors}" varStatus="counter">
+						<li>${error}</li>
+					</c:forEach>
+				</ul>
+			</div>
+		</c:if>
+		</div>
+		<!-- Add form -->
+		<div class="col-sm-12">
+			<form class="form-inline"
+				action="departments.html?action=${param.action}" method="POST">
+				<div class="form-group">
+					<input type="hidden" name="id" value="${department.id}"></input> <label
+						for="name">Name</label> <input type="text" class="form-control"
+						id="name" name="name" placeholder="Enter department name"
+						value="${department.name}">
+				</div>
+				<button type="submit" class="btn btn-success">
+					<c:out value="${btnLabel}" />
+				</button>
+			</form>
+		</div>
+		
+		<!-- Listing -->
+		<div class="col-sm-12">
+		<h3>Listing departments:</h3>
 		<c:if test="${not empty departments}">
 			<table class="table">
 				<tr>
@@ -60,10 +88,10 @@
 		</c:if>
 		<c:if test="${empty departments}">
 			<div>
-				No departments to show. Please <a href="departments.html?action=add">add</a>
-				a department.
+				No departments to show. Please add a department.
 			</div>
 		</c:if>
+		</div>
 	</div>
 </body>
 </html>
