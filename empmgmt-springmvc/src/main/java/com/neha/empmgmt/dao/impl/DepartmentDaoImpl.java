@@ -15,7 +15,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Override
 	public Department findById(int id) {
 		String sql = "Select * from department where id = ?";
@@ -38,18 +38,18 @@ public class DepartmentDaoImpl implements DepartmentDao {
 	public boolean save(Department department) {
 		String sql = "Insert into department(name) values(?)";
 		int noOfRows = jdbcTemplate.update(sql, new Object[] { department.getName() });
-		if(noOfRows > 0){
+		if (noOfRows > 0) {
 			return true;
 		}
 		return false;
-		
+
 	}
 
 	@Override
 	public boolean deleteById(int id) {
 		String sql = "Delete from department where id=?";
 		int noOfRows = jdbcTemplate.update(sql, new Object[] { id });
-		if(noOfRows > 0){
+		if (noOfRows > 0) {
 			return true;
 		}
 		return false;
@@ -59,17 +59,17 @@ public class DepartmentDaoImpl implements DepartmentDao {
 	public boolean update(Department department) {
 		String sql = "Update department set name=? where id =? ";
 		int noOfRows = jdbcTemplate.update(sql, new Object[] { department.getName(), department.getId() });
-		if(noOfRows > 0){
+		if (noOfRows > 0) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	@Override
-	public boolean deleteAll(){
+	public boolean deleteAll() {
 		String sql = "Delete from department";
 		int noOfRows = jdbcTemplate.update(sql);
-		if(noOfRows > 0){
+		if (noOfRows > 0) {
 			return true;
 		}
 		return false;
