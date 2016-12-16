@@ -14,7 +14,10 @@ import com.neha.empmgmt.model.Department;
 public class DepartmentDaoImpl extends HibernateDaoSupport implements DepartmentDao {
 	
 	@Autowired
-	SessionFactory sessionFactory;
+	public DepartmentDaoImpl(SessionFactory sessionfactory){
+	    setSessionFactory(sessionfactory);
+	}
+	
 	@Override
 	public Department findById(int id) {
 		return (Department)getHibernateTemplate().find("from department where id=?", id);
