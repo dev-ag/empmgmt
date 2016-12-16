@@ -46,7 +46,7 @@
 					<label
 						for="name">Name</label> <input type="text" class="form-control"
 						id="name" name="name" placeholder="Enter department name"
-						value="${department.name}">
+						value="${department.name}" required>
 				</div>
 				<button type="submit" class="btn btn-success">
 					<c:out value="${btnLabel}" />
