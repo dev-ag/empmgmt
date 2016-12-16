@@ -28,7 +28,9 @@ public class DepartmentDaoImpl extends HibernateDaoSupport implements Department
 	@Override
 	@Transactional
 	public Department findByName(String name) {
-		return (Department) getHibernateTemplate().get(Department.class, name);
+		Department department = (Department) getHibernateTemplate()
+				.find("from Department where name=?", new Object[] { name }).get(0);
+		return department;
 	}
 
 	@Override
@@ -68,7 +70,7 @@ public class DepartmentDaoImpl extends HibernateDaoSupport implements Department
 	public boolean deleteAll() {
 		List<Department> departments = this.findAll();
 		getHibernateTemplate().delete(departments);
-		return false;
+		return true;
 	}
 
 }
